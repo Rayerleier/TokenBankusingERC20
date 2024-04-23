@@ -23,6 +23,7 @@ contract TokenBank{
     }
 
     event Deposited(address indexed user, uint256 amount);
+    event Withdrawn(address indexed user, uint256 amount);
 
     function deposit(address _constractAdress, uint256 _amount)public returns (bool){
 
@@ -60,10 +61,9 @@ contract TokenBank{
         );
         require(withdrawSuccess, "Withdraw Failed.");
         balances[_constractAdress][msg.sender] -= _amount;
+        emit Withdrawn(msg.sender, _amount);
         return withdrawSuccess;
     }
 
-
-    
 
 }
