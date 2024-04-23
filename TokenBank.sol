@@ -11,6 +11,16 @@ pragma solidity ^0.8.0;
 
 contract TokenBank{
     mapping (address => mapping (address=>uint256)) balances;
+    address admin;
+
+    constructor(){
+        admin = msg.sender;
+    }
+
+    modifier OnlyAdmin{
+        require(msg.sender == admin, "Only Admin");
+        _;
+    }
 
     event Deposited(address indexed user, uint256 amount);
 
@@ -43,7 +53,7 @@ contract TokenBank{
     }
 
 
-    function withdraw(address _constractAdress, uint256 _amount)public returns (bool){
+    function withdraw(address _constractAdress, uint256 _amount)public OnlyAdmin returns (bool){
         require(balances[_constractAdress][msg.sender]>=_amount, "Not enough balances in TokenBank");
         (bool withdrawSuccess, ) = _constractAdress.call(
             abi.encodeWithSignature("transfer(address _to, uint256 _value)", _constractAdress, _amount)
